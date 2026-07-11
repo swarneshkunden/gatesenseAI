@@ -35,6 +35,7 @@ register_error_handlers(app)
 app.include_router(crowd.router)
 app.include_router(translation.router)
 
+
 @app.get("/")
 async def root():
     return {

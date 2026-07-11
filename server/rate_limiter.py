@@ -11,7 +11,8 @@ logger = logging.getLogger("volunteer_copilot.rate_limiter")
 # In production, this would use Redis
 ip_history = {}  # ip -> list of timestamps
 user_history = {}  # user_id/account -> list of timestamps
-auth_failures = {} # key (ip or account) -> {"count": int, "last_failure": float}
+# key (ip or account) -> {"count": int, "last_failure": float}
+auth_failures = {}
 default_history = {}
 loose_history = {}
 strict_history = {}
