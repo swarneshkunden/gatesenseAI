@@ -1,0 +1,7 @@
+zone_id,occupancy_rate,throughput_rate
+Gate A,92.0,340.0
+Gate B,35.0,90.0
+Gate C,25.0,75.0
+Gate D,98.0,420.0
+Corridor 1 (A-B),88.0,195.0
+Corridor 2 (C-D),40.0,110.0
