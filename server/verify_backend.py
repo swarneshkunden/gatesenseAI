@@ -4,7 +4,7 @@ import sys
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 """
 =============================================================================
-Volunteer Copilot - Comprehensive Verification Test Suite
+gatesenseAI - Comprehensive Verification Test Suite
 FIFA World Cup 2026 | Crowd & Translation Backend
 =============================================================================
 

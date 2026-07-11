@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, field_validator
 from typing import List, Optional
 
+
 class TranslationRequest(BaseModel):
     text: str = Field(..., min_length=1, max_length=2000, description="Fan text to translate")
     fan_language: Optional[str] = Field(default="Auto", max_length=50)
@@ -24,6 +25,7 @@ class TranslationRequest(BaseModel):
             raise ValueError(f"stress_level must be one of {valid}")
         return v.lower()
 
+
 class ScriptRequest(BaseModel):
     scenario: str = Field(..., min_length=5, max_length=1000, description="The routing or operational instructions context")
     target_gates: List[str] = Field(..., min_length=1, max_length=10)
@@ -44,6 +46,7 @@ class ScriptRequest(BaseModel):
             if len(lang) > 30:
                 raise ValueError("Language name too long")
         return v
+
 
 class CrowdStateUpdate(BaseModel):
     zone_id: str = Field(..., min_length=1, max_length=50)

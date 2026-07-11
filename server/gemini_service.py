@@ -11,13 +11,14 @@ _genai_client = None
 if settings.gemini_api_key:
     try:
         from google import genai
+        from google.genai.errors import ClientError
         _genai_client = genai.Client(api_key=settings.gemini_api_key)
         api_key_configured = True
         logger.info("Google Gemini API (google-genai SDK) successfully configured.")
     except Exception as e:
         logger.error(f"Failed to configure Google Gemini API: {str(e)}")
 
-MODEL_ID = "gemini-2.0-flash"
+MODEL_IDS = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-2.0-flash"]
 
 class GeminiService:
 
@@ -98,6 +99,25 @@ class GeminiService:
         }
 
     @classmethod
+    def _generate_json_content(cls, prompt: str) -> str:
+        last_exception = None
+        for model in MODEL_IDS:
+            try:
+                response = _genai_client.models.generate_content(
+                    model=model,
+                    contents=prompt,
+                    config={"response_mime_type": "application/json"}
+                )
+                logger.info(f"Gemini model {model} generated content successfully.")
+                return response.text
+            except Exception as e:
+                last_exception = e
+                logger.warning(f"Gemini model {model} failed: {str(e)}")
+                continue
+        logger.error("All Gemini models failed to generate content.")
+        raise last_exception or RuntimeError("Gemini content generation failed.")
+
+    @classmethod
     def analyze_crowd(cls, zones: list, threshold: float) -> dict:
         if not api_key_configured or _genai_client is None:
             logger.warning("Gemini API key not configured. Using Mock Crowd Engine.")
@@ -116,13 +136,7 @@ class GeminiService:
                 f"3. Provide the response as a JSON object with these keys: 'alerts' (list of strings explaining which gates are overloaded), 'instructions' (a string outlining details, actions, and directions for volunteers)."
             )
 
-            response = _genai_client.models.generate_content(
-                model=MODEL_ID,
-                contents=prompt,
-                config={"response_mime_type": "application/json"}
-            )
-
-            return json.loads(response.text)
+            return json.loads(cls._generate_json_content(prompt))
         except Exception as e:
             logger.error(f"Gemini API Error in analyze_crowd: {str(e)}")
             return cls._get_mock_crowd_response(zones, threshold)
@@ -130,8 +144,8 @@ class GeminiService:
     @classmethod
     def translate_query(cls, text: str, fan_lang: str, fan_origin: str, urgency: str, stress: str) -> dict:
         if not api_key_configured or _genai_client is None:
-            logger.warning("Gemini API key not configured. Using Mock Translation Engine.")
-            return cls._get_mock_translation_response(text, fan_lang, fan_origin, urgency, stress)
+            logger.error("Gemini API key not configured. Real-time translation is required.")
+            raise RuntimeError("Gemini API key is not configured. Please set GEMINI_API_KEY for live translation.")
 
         try:
             prompt = (
@@ -153,16 +167,10 @@ class GeminiService:
                 f"6. Return the response as a JSON object with these keys: 'detected_language', 'fan_text_en', 'urgency_analysis', 'suggested_response_en', 'suggested_response_fan_lang'."
             )
 
-            response = _genai_client.models.generate_content(
-                model=MODEL_ID,
-                contents=prompt,
-                config={"response_mime_type": "application/json"}
-            )
-
-            return json.loads(response.text)
+            return json.loads(cls._generate_json_content(prompt))
         except Exception as e:
             logger.error(f"Gemini API Error in translate_query: {str(e)}")
-            return cls._get_mock_translation_response(text, fan_lang, fan_origin, urgency, stress)
+            raise
 
     @classmethod
     def generate_broadcast(cls, scenario: str, target_gates: list, languages: list) -> dict:
