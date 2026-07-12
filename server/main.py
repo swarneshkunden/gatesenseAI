@@ -13,27 +13,14 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS setup for the frontend client
-# allowed_origins = [
-#     origin.strip()
-#     for origin in os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")
-#     if origin.strip()
-# ]
-
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=allowed_origins,
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-
+# CORS setup for local development and production frontend hosts
 allowed_origins = [
-    "http://localhost:5173",   # local Vite dev server
-    "http://127.0.0.1:5173",
+    origin.strip()
+    for origin in os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")
+    if origin.strip()
 ]
 
-# Production frontend URL, set as an env var once deployed (Step 8)
+# Add the deployed frontend URL when provided
 frontend_url = os.getenv("FRONTEND_URL")
 if frontend_url:
     allowed_origins.append(frontend_url)

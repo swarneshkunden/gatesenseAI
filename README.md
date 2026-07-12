@@ -147,8 +147,37 @@ python verify_backend.py
 ## Notes
 
 - The frontend expects the backend to be running on port 8000.
-- If you deploy the frontend separately, set the Vite environment variable `VITE_API_BASE_URL` to your backend URL.
+- If you deploy the frontend separately, set the Vite environment variable `VITE_API_URL` to your backend URL.
 - The app is designed to work locally first and can be deployed with a production server setup afterward.
+
+## Deploy to production
+
+### Option 1: Backend on Render, frontend on Vercel
+
+1. Backend deployment on Render
+   - Create a new Web Service from the server folder.
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+   - Environment variables:
+     - `GEMINI_API_KEY=your_key`
+     - `HOST=0.0.0.0`
+     - `PORT=8000`
+     - `FRONTEND_URL=https://your-frontend-domain.vercel.app`
+
+2. Frontend deployment on Vercel
+   - Import the repository into Vercel.
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+   - Environment variable:
+     - `VITE_API_URL=https://your-backend-domain.onrender.com`
+
+3. Test the live app
+   - Open the frontend URL.
+   - Confirm the dashboard loads and translation requests reach the backend.
+
+### Option 2: One-click deploy with Render static site
+
+If you prefer a single-service deployment, you can also host the frontend as a static site and point it to the backend URL above.
 
 ## License
 
