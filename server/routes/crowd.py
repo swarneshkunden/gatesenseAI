@@ -1,13 +1,21 @@
-import os
-import uuid
-import logging
 import io
-import pandas as pd
-from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status
-from pydantic import ValidationError
+import logging
+import os
+import sys
+import uuid
+from pathlib import Path
 from typing import List
+
+import pandas as pd
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
+from pydantic import ValidationError
+
+SERVER_DIR = Path(__file__).resolve().parents[1]
+if str(SERVER_DIR) not in sys.path:
+    sys.path.insert(0, str(SERVER_DIR))
+
 from schemas import CrowdStateUpdate
-from rate_limiter import rate_limit_default, rate_limit_strict, rate_limit_loose
+from rate_limiter import rate_limit_default, rate_limit_loose, rate_limit_strict
 from gemini_service import GeminiService
 
 logger = logging.getLogger("volunteer_copilot.routes.crowd")

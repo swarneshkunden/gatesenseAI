@@ -1,8 +1,16 @@
-import time
-import math
 import logging
+import math
+import sys
+import time
 from collections import deque
-from fastapi import Request, HTTPException, status
+from pathlib import Path
+
+from fastapi import HTTPException, Request, status
+
+SERVER_DIR = Path(__file__).resolve().parent
+if str(SERVER_DIR) not in sys.path:
+    sys.path.insert(0, str(SERVER_DIR))
+
 from config import settings
 
 logger = logging.getLogger("volunteer_copilot.rate_limiter")

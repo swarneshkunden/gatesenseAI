@@ -1,8 +1,15 @@
-import uvicorn
-import sys
 import os
+import sys
+from pathlib import Path
+
+import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
+SERVER_DIR = Path(__file__).resolve().parent
+if str(SERVER_DIR) not in sys.path:
+    sys.path.insert(0, str(SERVER_DIR))
+
 from error_handlers import register_error_handlers
 from routes import crowd, translation
 from config import settings

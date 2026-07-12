@@ -1,5 +1,13 @@
 import logging
+import sys
+from pathlib import Path
+
 from fastapi import APIRouter, Depends, HTTPException
+
+SERVER_DIR = Path(__file__).resolve().parents[1]
+if str(SERVER_DIR) not in sys.path:
+    sys.path.insert(0, str(SERVER_DIR))
+
 from schemas import TranslationRequest, ScriptRequest
 from rate_limiter import rate_limit_default
 from gemini_service import GeminiService
