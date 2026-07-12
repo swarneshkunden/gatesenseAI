@@ -40,6 +40,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# Security headers to harden responses
+@app.middleware("http")
+async def add_security_headers(request, call_next):
+    response = await call_next(request)
+    # Prevent MIME sniffing
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    # Prevent clickjacking
+    response.headers.setdefault("X-Frame-Options", "DENY")
+    # Referrer policy
+    response.headers.setdefault("Referrer-Policy", "no-referrer")
+    # Basic Content Security Policy (restricts inline scripts/styles where possible)
+    response.headers.setdefault("Content-Security-Policy", "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self' data:")
+    # Enforce secure transport for 1 year
+    response.headers.setdefault("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+    return response
+
 # Register custom exception handlers (Prevents information leakage)
 register_error_handlers(app)
 

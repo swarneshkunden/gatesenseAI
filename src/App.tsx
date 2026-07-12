@@ -533,8 +533,10 @@ function App() {
               </div>
 
               <div className="input-group">
-                <label>Direct Fan Statement / Voice-to-Text Input</label>
+                <label htmlFor="fan-textarea">Direct Fan Statement / Voice-to-Text Input</label>
                 <textarea
+                  id="fan-textarea"
+                  aria-label="Fan statement input"
                   className="textarea-field"
                   placeholder="e.g. Me siento muy mal, me duele el pecho, ¿dónde está la ambulancia? / Help! I lost my child at Gate B!"
                   rows={4}
@@ -547,8 +549,8 @@ function App() {
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div className="input-group">
-                  <label>Declared Language</label>
-                  <select className="select-field" value={fanLanguage} onChange={(e) => setFanLanguage(e.target.value)}>
+                  <label htmlFor="fan-language-select">Declared Language</label>
+                  <select id="fan-language-select" aria-label="Declared language" className="select-field" value={fanLanguage} onChange={(e) => setFanLanguage(e.target.value)}>
                     <option value="Auto">Auto Detect</option>
                     <option value="Spanish">Spanish</option>
                     <option value="French">French</option>
@@ -559,8 +561,10 @@ function App() {
                   </select>
                 </div>
                 <div className="input-group">
-                  <label>Fan Origin (Country)</label>
+                  <label htmlFor="fan-origin-input">Fan Origin (Country)</label>
                   <input
+                    id="fan-origin-input"
+                    aria-label="Fan origin country"
                     type="text"
                     className="input-field"
                     placeholder="e.g. Argentina"
@@ -573,8 +577,8 @@ function App() {
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div className="input-group">
-                  <label>Urgency Profile</label>
-                  <select className="select-field" value={urgencyLevel} onChange={(e) => setUrgencyLevel(e.target.value)}>
+                  <label htmlFor="urgency-select">Urgency Profile</label>
+                  <select id="urgency-select" aria-label="Urgency profile" className="select-field" value={urgencyLevel} onChange={(e) => setUrgencyLevel(e.target.value)}>
                     <option value="casual">Casual (Directions, Info)</option>
                     <option value="important">Important (Ticketing, Logistics)</option>
                     <option value="urgent">Urgent (Heat exhaustion, Lost item)</option>
@@ -582,8 +586,8 @@ function App() {
                   </select>
                 </div>
                 <div className="input-group">
-                  <label>Stress Indicator</label>
-                  <select className="select-field" value={stressLevel} onChange={(e) => setStressLevel(e.target.value)}>
+                  <label htmlFor="stress-select">Stress Indicator</label>
+                  <select id="stress-select" aria-label="Stress indicator" className="select-field" value={stressLevel} onChange={(e) => setStressLevel(e.target.value)}>
                     <option value="calm">Calm / Normal</option>
                     <option value="anxious">Anxious / Stressed</option>
                     <option value="panicked">Panicked / Hysterical</option>
@@ -715,6 +719,7 @@ function App() {
                     <button
                       key={gate}
                       type="button"
+                      aria-pressed={selectedGates.includes(gate)}
                       onClick={() => toggleGateSelection(gate)}
                       style={{
                         padding: '0.35rem 0.75rem',
@@ -741,6 +746,7 @@ function App() {
                     <button
                       key={lang}
                       type="button"
+                      aria-pressed={selectedLanguages.includes(lang)}
                       onClick={() => toggleLanguageSelection(lang)}
                       style={{
                         padding: '0.35rem 0.75rem',

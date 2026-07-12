@@ -1,5 +1,7 @@
 # GatesenseAI
 
+![CI](https://github.com/your-username/your-repo-name/actions/workflows/ci.yml/badge.svg)
+
 GatesenseAI is a full-stack stadium operations assistant built for a FIFA World Cup 2026-style event environment. It combines a React + Vite frontend with a FastAPI backend to help volunteers manage crowd flow, translate fan requests, generate broadcast announcements, and simulate stadium data.
 
 ## Project Overview
@@ -129,6 +131,21 @@ python verify_backend.py
 ```
 
 ## 8. Useful commands
+
+### Run tests (backend)
+
+From the project root run:
+
+```bash
+cd server
+pip install -r requirements.txt
+pytest -q
+```
+
+Continuous Integration:
+
+This repository includes a GitHub Actions workflow at `.github/workflows/ci.yml` that runs backend tests and performs the frontend build on pushes and pull requests to `main`. Add `VITE_API_URL` to repository secrets in Settings for production builds.
+
 
 ### Frontend
 ```bash
