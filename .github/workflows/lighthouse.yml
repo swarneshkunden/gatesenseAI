@@ -1,0 +1,20 @@
+name: Lighthouse Accessibility Audit
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Lighthouse (accessibility)
+        uses: treosh/lighthouse-ci-action@v8
+        with:
+          urls: ${{ secrets.FRONTEND_URL || 'https://gatesense-ai.vercel.app' }}
+          uploadArtifacts: false
+        env:
+          # Optionally set LHCI_TOKEN if you use a Lighthouse CI server
+          LHCI_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
