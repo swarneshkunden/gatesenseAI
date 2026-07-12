@@ -8,23 +8,41 @@ from routes import crowd, translation
 from config import settings
 
 app = FastAPI(
-    title="FIFA World Cup 2026 - Volunteer Copilot API",
+    title="FIFA World Cup 2026 - gatesenseAI",
     description="Backend API powering live crowd management and multilingual translation support for volunteers.",
     version="1.0.0"
 )
 
 # CORS setup for the frontend client
+# allowed_origins = [
+#     origin.strip()
+#     for origin in os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")
+#     if origin.strip()
+# ]
+
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=allowed_origins,
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
+
 allowed_origins = [
-    origin.strip()
-    for origin in os.getenv("CORS_ALLOWED_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173").split(",")
-    if origin.strip()
+    "http://localhost:5173",   # local Vite dev server
+    "http://127.0.0.1:5173",
 ]
+
+# Production frontend URL, set as an env var once deployed (Step 8)
+frontend_url = os.getenv("FRONTEND_URL")
+if frontend_url:
+    allowed_origins.append(frontend_url)
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
@@ -52,9 +70,4 @@ if __name__ == "__main__":
     else:
         print("[SUCCESS] Gemini API Key found. Real AI engine enabled.")
 
-    uvicorn.run(
-        "main:app",
-        host=settings.host,
-        port=settings.port,
-        reload=settings.debug or settings.environment.lower() != "production",
-    )
+    uvicorn.run("main:app", host=settings.host, port=settings.port, reload=(settings.environment == "development"))
